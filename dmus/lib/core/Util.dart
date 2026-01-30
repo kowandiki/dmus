@@ -132,8 +132,8 @@ String formatDuration(Duration d) {
 /// If none of the information exists it returns an empty string
 String subtitleFromMetadata(AudioMetadata m) {
   return [
+    if (m.artist != null) m.artist!,
     if (m.album != null) m.album!,
-    if (m.album == null && m.artist != null) m.artist!,
   ].join(" - ");
 }
 
