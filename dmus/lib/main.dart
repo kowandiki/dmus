@@ -26,7 +26,7 @@ import 'package:dmus/ui/pages/SongsPage.dart';
 import 'package:dmus/ui/widgets/CurrentlyPlayingBar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '/l10n/app_localizations.dart';
+import 'package:dmus/l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:just_audio/just_audio.dart' as ja;
 import 'package:logging/logging.dart';
