@@ -10,7 +10,7 @@ import '/generated/l10n.dart';
 import '../widgets/SettingsDrawer.dart';
 
 class ArtistPage extends StatelessNavigationPage {
-  ArtistPage({super.key}) : super(icon: Icons.art_track, title: S.current.artists);
+  ArtistPage({super.key}) : super(icon: Icons.group, title: S.current.artists);
 
   static String onEmptyText = S.current.artistsAppear;
 

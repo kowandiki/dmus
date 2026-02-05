@@ -146,7 +146,8 @@ class Song extends DataEntity {
 
     if (metadata.album != null) {
       a.add(metadata.album!);
-    } else if (metadata.artist != null) {
+    } 
+    if (metadata.artist != null) {
       a.add(metadata.artist!);
     }
 

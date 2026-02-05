@@ -76,7 +76,7 @@ final class TableFMetadata {
     Digest? cacheKey;
 
     if (m.pictures.isNotEmpty) {
-      cacheKey = await ImageCacheController.cacheMemoryImage(m.pictures.first.bytes!);
+      cacheKey = await ImageCacheController.cacheMemoryImage(m.pictures.first.bytes);
     } else {
       cacheKey = await ImageCacheController.findAndCacheCoverFromDirectory(file.parent);
     }

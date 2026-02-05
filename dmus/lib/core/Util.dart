@@ -69,6 +69,7 @@ Future<void> initLogging(Level l) async {
       logging.shout("Logging setup! Logs are supposed to be written to $logFile, but it does not exist!");
     }
   } on Exception catch (e) {
+    debugPrint(e.toString());
     debugPrint("Could not setup logging!");
   }
 }
@@ -132,8 +133,8 @@ String formatDuration(Duration d) {
 /// If none of the information exists it returns an empty string
 String subtitleFromMetadata(AudioMetadata m) {
   return [
+    if (m.artist != null) m.artist!,
     if (m.album != null) m.album!,
-    if (m.album == null && m.artist != null) m.artist!,
   ].join(" - ");
 }
 

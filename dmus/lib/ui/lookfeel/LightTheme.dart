@@ -86,7 +86,7 @@ ThemeData lightTheme() => ThemeData(
       textSelectionTheme: const TextSelectionThemeData(
         cursorColor: LIGHT_THEME_DARK2,
       ),
-      tabBarTheme: const TabBarTheme(
+      tabBarTheme: const TabBarThemeData(
         labelColor: Colors.black,
         labelStyle: TextStyle(
           fontWeight: FontWeight.w800,
