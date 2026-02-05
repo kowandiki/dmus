@@ -29,5 +29,6 @@ class ArtDisplay extends StatelessWidget {
     }
 
     return AspectRatio(aspectRatio: 1.0, child: picture);
+    // return AspectRatio(aspectRatio: 1.0, child: const Icon(Icons.music_note));
   }
 }
