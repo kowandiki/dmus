@@ -31,8 +31,8 @@ class _SongUploadFormState extends State<SongUploadForm> {
   List<Song> selectedSongs = [];
 
   static String title = S.current.uploadSongs;
-  static const double pad = 15.0;
-  static const int maxTitleLength = 512;
+  // static const double pad = 15.0;
+  // static const int maxTitleLength = 512;
 
   @override
   void initState() {

@@ -19,17 +19,45 @@ class EntityInfoTile extends StatelessWidget {
           children: [
             getRoundedCornerContainerImage(context, entity, THUMB_SIZE * 1.5),
             const SizedBox(width: 6),
-            Expanded(
-                child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
+            Expanded(child: Column(
               children: [
-                Text(entity.title),
-                Text(entity.basicInfoText()),
+                Row(
+                  children: [
+                    const Icon(Icons.music_note),
+                    const SizedBox(width: 6,),
+                    Text(entity.title),
+                  ]
+                ),
+                ...(entity is Song) ? [
+                  Row(
+                    children: [
+                      const Icon(Icons.person),
+                      const SizedBox(width: 6,),
+                      Text((entity as Song).songArtist()),
+                    ]
+                  ),
+                  Visibility(
+                    visible: (entity as Song).metadata.album != null,
+                    child: Row(
+                      children: [
+                        const Icon(Icons.album),
+                        const SizedBox(width: 6,),
+                        Text((entity as Song).songAlbum()),
+                      ]
+                    )
+                  )
+                ] : [],
+                Row(
+                  children: [
+                    const Icon(Icons.info),
+                    const SizedBox(width: 6,),
+                    Text(entity.basicInfoText()),
+                  ]
+                ),
               ],
             )),
             const SizedBox(width: 6),
-            getTrailing(context)
+            getTrailing(context),
           ],
         ));
   }
@@ -38,7 +66,7 @@ class EntityInfoTile extends StatelessWidget {
     return Row(
       children: [
         IconButton(onPressed: () => popShowShareDialog(context, entity), icon: const Icon(Icons.share)),
-        if (entity.entityType == EntityType.song) LikeButton(songContext: entity as Song)
+        if (entity.entityType == EntityType.song) LikeButton(songContext: entity as Song),
       ],
     );
   }

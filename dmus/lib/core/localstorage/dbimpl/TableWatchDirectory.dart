@@ -38,7 +38,8 @@ final class TableWatchDirectory {
         isRecursiveCol: isRecursive.toString()
       });
     } on DatabaseException catch (e) {
-      // ignore duplicate key errors
+      // log duplicate key errors
+      logging.fine(e);
     }
 
     return null;

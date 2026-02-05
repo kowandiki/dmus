@@ -69,6 +69,7 @@ Future<void> initLogging(Level l) async {
       logging.shout("Logging setup! Logs are supposed to be written to $logFile, but it does not exist!");
     }
   } on Exception catch (e) {
+    debugPrint(e.toString());
     debugPrint("Could not setup logging!");
   }
 }
