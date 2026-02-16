@@ -125,13 +125,9 @@ final class TableSong {
   ///
   /// Returns a list of Song objects
   static Future<List<Song>> selectAllWithMetadata() async {
-    final startTime = DateTime.now();
-    debugPrint("selectAllWithMetadata Start Time: $startTime");
-    var db = await DatabaseController.database;
-    debugPrint("selectAllWithMetadata db; diff: ${DateTime.now().difference(startTime)}");
 
-    // const String sql = "SELECT * FROM ${TableSong.name}"
-    //     " JOIN ${TableFMetadata.name} ON ${TableSong.name}.${TableSong.idCol} = ${TableFMetadata.name}.${TableFMetadata.idCol}";
+    var db = await DatabaseController.database;
+
     const String sql = """SELECT 
         *, 
         CASE 
@@ -147,17 +143,9 @@ final class TableSong {
       FROM ${TableSong.name} TS 
       JOIN ${TableFMetadata.name} M ON M.${TableFMetadata.idCol} = TS.${TableSong.idCol}""";
 
-
     var result = await db.rawQuery(sql);
 
-    debugPrint("selectAllWithMetadata rawquery; diff: ${DateTime.now().difference(startTime)}");
-
     final results = await Future.wait(result.map((e) => fromMappedObjects(e)));
-    debugPrint("selectAllWithMetadata map; diff: ${DateTime.now().difference(startTime)}");
-    // for (final Song i in results) { // ~ 32 s
-    //   i.liked = await TableLikes.isSongLiked(i.id);
-    // }
-    debugPrint("selectAllWithMetadata finished; diff: ${DateTime.now().difference(startTime)}");
 
     return results;
 
