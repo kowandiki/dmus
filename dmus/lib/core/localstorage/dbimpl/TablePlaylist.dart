@@ -79,6 +79,8 @@ final class TablePlaylist {
 
     final db = await DatabaseController.database;
 
+
+
     final exists = await db.query(name, where: '$idCol = ?', whereArgs: [playlistId]);
 
     if (exists.firstOrNull == null) {
@@ -92,7 +94,7 @@ final class TablePlaylist {
       whereArgs: [playlistId],
       {titleCol: title},
     );
-
+    
     TablePlaylistSong.setSongsInPlaylist(playlistId, songs);
 
     return playlistId;

@@ -67,10 +67,12 @@ final class TableFMetadata {
     logging.info("Updating metadata for $file with id $songId");
 
     AudioMetadata m;
+
     try {
       m = readMetadata(file, getImage: true);
-    } on (MetadataParserException, NoMetadataParserException) {
+    } catch (e) {
       m = AudioMetadata(file: file, title: Path.basename(file.path));
+      logging.severe("Failed to read metadata", e);
     }
 
     Digest? cacheKey;
@@ -117,10 +119,12 @@ final class TableFMetadata {
     logging.info("Inserting metadata for $file with id $songId");
 
     AudioMetadata m;
+
     try {
       m = readMetadata(file, getImage: true);
-    } on (MetadataParserException, NoMetadataParserException) {
+    } catch (e) {
       m = AudioMetadata(file: file, title: Path.basename(file.path));
+      logging.severe("Failed to read metadata", e);
     }
 
     Digest? cacheKey;

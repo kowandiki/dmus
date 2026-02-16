@@ -1,4 +1,5 @@
 import 'package:dmus/core/localstorage/DatabaseController.dart';
+import 'package:sqflite/sqflite.dart';
 
 import '../../Util.dart';
 import '../../data/DataEntity.dart';
@@ -25,8 +26,27 @@ final class TablePlaylistSong {
   /// Throws DatabaseException
   static Future<bool> setSongsInPlaylistJustId(int playlistId, List<int> songs) async {
     var db = await DatabaseController.database;
+    await db.transaction((txn) async {
 
-    await db.delete(
+      await txn.delete(
+        name,
+        where: '$playlistIdCol = ?',
+        whereArgs: [playlistId],
+      );
+
+      const String sql = "INSERT OR IGNORE INTO $name ($playlistIdCol, $songIdCol, $songIndexCol) VALUES (?, ?, ?);";
+
+      for (int i = 0; i < songs.length; i++) {
+        await txn.rawInsert(sql, [playlistId, songs[i], i]);
+      }
+    });
+    
+
+    return true;
+  }
+
+  static Future<bool>setSongsInPlaylistJustIdTx(Transaction txn, int playlistId, List<int> songs) async {
+    await txn.delete(
       name,
       where: '$playlistIdCol = ?',
       whereArgs: [playlistId],
@@ -35,7 +55,7 @@ final class TablePlaylistSong {
     const String sql = "INSERT OR IGNORE INTO $name ($playlistIdCol, $songIdCol, $songIndexCol) VALUES (?, ?, ?);";
 
     for (int i = 0; i < songs.length; i++) {
-      await db.rawInsert(sql, [playlistId, songs[i], i]);
+      await txn.rawInsert(sql, [playlistId, songs[i], i]);
     }
 
     return true;
@@ -50,6 +70,10 @@ final class TablePlaylistSong {
     return await setSongsInPlaylistJustId(playlistId, songs.map((e) => e.id).toList());
   }
 
+  static Future<bool> setSongsInPlaylistTx(Transaction txn, int playlistId, List<Song> songs) async {
+    return await setSongsInPlaylistJustIdTx(txn, playlistId, songs.map((e) => e.id).toList());
+  }
+
   static Future<void> removeSongFromPlaylist(int playlistId, int songId) async {
     var db = await DatabaseController.database;
 
@@ -61,19 +85,23 @@ final class TablePlaylistSong {
   static Future<void> appendSongToPlaylist(int playlistId, int songId) async {
     var db = await DatabaseController.database;
 
-    const sql =
+    await db.transaction((txn) async {
+      const sql =
         "SELECT song_index FROM ${TablePlaylistSong.name} WHERE ${TablePlaylistSong.playlistIdCol} = ? ORDER BY ${TablePlaylistSong.songIndexCol} DESC LIMIT 1";
 
-    final lastIndex = await db.rawQuery(sql, [songId]);
+      final lastIndex = await txn.rawQuery(sql, [songId]);
 
-    int index = 0;
+      int index = 0;
 
-    if (lastIndex.isNotEmpty) {
-      index = lastIndex.first[songIndexCol] as int;
-      index++;
-      logging.info("Previous index was $index");
-    }
+      if (lastIndex.isNotEmpty) {
+        index = lastIndex.first[songIndexCol] as int;
+        index++;
+        logging.finest("Previous index was $index");
+      }
 
-    await db.insert(name, {playlistIdCol: playlistId, songIdCol: songId, songIndexCol: index});
+      await txn.insert(name, {playlistIdCol: playlistId, songIdCol: songId, songIndexCol: index});
+    });
+
+    
   }
 }

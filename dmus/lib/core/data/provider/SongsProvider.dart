@@ -14,7 +14,7 @@ class SongsProvider extends ChangeNotifier {
   late final List<StreamSubscription> _subscriptions;
 
   final List<Song> songs = [];
-
+  
   SongsProvider() {
     _instance = this;
 
