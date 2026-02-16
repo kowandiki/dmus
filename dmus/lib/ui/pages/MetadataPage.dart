@@ -24,7 +24,7 @@ class MetadataPage extends StatelessWidget {
     int? trackNumber = metadata.trackNumber;
     // int? albumLength = metadata.albumLength; // i have no idea what this is
     int? year = metadata.year?.year;
-    String? genre = metadata.genres.join(", ");
+    String genre = metadata.genres.join(", ");
     int? discNumber = metadata.discNumber;
     Duration? trackDuration = metadata.duration;
     int? bitrate = metadata.bitrate;
@@ -114,7 +114,7 @@ class MetadataPage extends StatelessWidget {
                   ]),
                   DataRow(cells: [
                     DataCell(Text(S.current.genre)),
-                    DataCell(Text(genre ?? S.current.nA)),
+                    DataCell(Text(genre == "" ? S.current.nA : genre)),
                   ]),
                   DataRow(cells: [
                     DataCell(Text(S.current.trackNumber)),

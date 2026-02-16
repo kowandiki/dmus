@@ -4,7 +4,6 @@ import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 
 import '../../localstorage/ImportController.dart';
-import '../../localstorage/dbimpl/TableLikes.dart';
 import '../../localstorage/dbimpl/TablePlaylist.dart';
 import '../DataEntity.dart';
 
@@ -20,7 +19,7 @@ class PlaylistProvider extends ChangeNotifier {
       ImportController.onPlaylistDeleted.listen(deletePlaylist),
     ];
 
-    TableLikes.reGenerateLikedPlaylist().whenComplete(() => TablePlaylist.selectAll().then(fillPlaylists));
+    TablePlaylist.generateLikesPlaylist().whenComplete(()=>TablePlaylist.selectAll().then(fillPlaylists));
   }
 
   @override

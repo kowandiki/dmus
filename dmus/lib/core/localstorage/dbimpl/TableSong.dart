@@ -5,7 +5,9 @@ import 'package:audio_metadata_reader/audio_metadata_reader.dart';
 import 'package:dmus/core/data/MyDataEntityCache.dart';
 import 'package:dmus/core/localstorage/DatabaseController.dart';
 import 'package:dmus/core/localstorage/dbimpl/TableFMetadata.dart';
-import 'package:dmus/core/localstorage/dbimpl/TableLikes.dart';
+import 'package:dmus/core/localstorage/dbimpl/TablePlaylist.dart';
+import 'package:dmus/core/localstorage/dbimpl/TablePlaylistSong.dart';
+import 'package:flutter/material.dart';
 import 'package:path/path.dart' as Path;
 import 'package:sqflite/sqflite.dart';
 
@@ -123,19 +125,42 @@ final class TableSong {
   ///
   /// Returns a list of Song objects
   static Future<List<Song>> selectAllWithMetadata() async {
+    final startTime = DateTime.now();
+    debugPrint("selectAllWithMetadata Start Time: $startTime");
     var db = await DatabaseController.database;
+    debugPrint("selectAllWithMetadata db; diff: ${DateTime.now().difference(startTime)}");
 
-    const String sql = "SELECT * FROM ${TableSong.name}"
-        " JOIN ${TableFMetadata.name} ON ${TableSong.name}.${TableSong.idCol} = ${TableFMetadata.name}.${TableFMetadata.idCol}";
+    // const String sql = "SELECT * FROM ${TableSong.name}"
+    //     " JOIN ${TableFMetadata.name} ON ${TableSong.name}.${TableSong.idCol} = ${TableFMetadata.name}.${TableFMetadata.idCol}";
+    const String sql = """SELECT 
+        *, 
+        CASE 
+            WHEN EXISTS (
+                SELECT 1 
+                FROM ${TablePlaylistSong.name} 
+                WHERE ${TablePlaylistSong.playlistIdCol} = ${TablePlaylist.likedPlaylistId} 
+                  AND ${TableSong.idCol} = TS.${TableSong.idCol}
+            )
+            THEN 1 
+            ELSE 0
+        END AS is_liked
+      FROM ${TableSong.name} TS 
+      JOIN ${TableFMetadata.name} M ON M.${TableFMetadata.idCol} = TS.${TableSong.idCol}""";
+
 
     var result = await db.rawQuery(sql);
 
-    final results = await Future.wait(result.map((e) => fromMappedObjects(e)));
+    debugPrint("selectAllWithMetadata rawquery; diff: ${DateTime.now().difference(startTime)}");
 
-    for (final Song i in results) {
-      i.liked = await TableLikes.isSongLiked(i.id);
-    }
+    final results = await Future.wait(result.map((e) => fromMappedObjects(e)));
+    debugPrint("selectAllWithMetadata map; diff: ${DateTime.now().difference(startTime)}");
+    // for (final Song i in results) { // ~ 32 s
+    //   i.liked = await TableLikes.isSongLiked(i.id);
+    // }
+    debugPrint("selectAllWithMetadata finished; diff: ${DateTime.now().difference(startTime)}");
+
     return results;
+
   }
 
   /// Returns a song from a map of column names to their datatype
@@ -160,9 +185,11 @@ final class TableSong {
 
     Song s = Song.withDuration(id: id, title: title, duration: duration, file: File(path), metadata: m);
 
-    await s.setPictureCacheKey(e[TableFMetadata.artCacheKeyCol] as Uint8List?);
+    if (e.containsKey("is_liked")) {
+      s.liked = e["is_liked"] == 1 ? true : false;
+    }
 
-    s.liked = await TableLikes.isSongLiked(s.id);
+    await s.setPictureCacheKey(e[TableFMetadata.artCacheKeyCol] as Uint8List?);
 
     MyDataEntityCache.updateCache(s);
 

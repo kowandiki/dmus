@@ -25,7 +25,7 @@ class EntityInfoTile extends StatelessWidget {
                   children: [
                     const Icon(Icons.music_note),
                     const SizedBox(width: 6,),
-                    Text(entity.title),
+                    Expanded(child:Text(entity.title)),
                   ]
                 ),
                 ...(entity is Song) ? [
@@ -33,7 +33,7 @@ class EntityInfoTile extends StatelessWidget {
                     children: [
                       const Icon(Icons.person),
                       const SizedBox(width: 6,),
-                      Text((entity as Song).songArtist()),
+                      Expanded(child:Text((entity as Song).songArtist())),
                     ]
                   ),
                   Visibility(
@@ -42,7 +42,7 @@ class EntityInfoTile extends StatelessWidget {
                       children: [
                         const Icon(Icons.album),
                         const SizedBox(width: 6,),
-                        Text((entity as Song).songAlbum()),
+                        Expanded(child: Text((entity as Song).songAlbum()),),
                       ]
                     )
                   )
@@ -51,7 +51,7 @@ class EntityInfoTile extends StatelessWidget {
                   children: [
                     const Icon(Icons.info),
                     const SizedBox(width: 6,),
-                    Text(entity.basicInfoText()),
+                    Expanded(child:Text(entity.basicInfoText())),
                   ]
                 ),
               ],

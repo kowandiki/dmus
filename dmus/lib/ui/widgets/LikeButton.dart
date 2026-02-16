@@ -1,7 +1,8 @@
+import 'package:dmus/core/localstorage/dbimpl/TablePlaylist.dart';
+import 'package:dmus/core/localstorage/dbimpl/TablePlaylistSong.dart';
 import 'package:flutter/material.dart';
 
 import '../../core/data/DataEntity.dart';
-import '../../core/localstorage/dbimpl/TableLikes.dart';
 
 class LikeButton extends StatefulWidget {
   final Song songContext;
@@ -26,9 +27,9 @@ class _LikeButtonState extends State<LikeButton> {
         songContext.liked = !songContext.liked;
 
         if (songContext.liked) {
-          TableLikes.markSongLiked(songContext);
+          TablePlaylistSong.appendSongToPlaylist(TablePlaylist.likedPlaylistId, songContext.id);
         } else {
-          TableLikes.markSongNotLiked(songContext);
+          TablePlaylistSong.removeSongFromPlaylist(TablePlaylist.likedPlaylistId, songContext.id);
         }
 
         setState(() {});

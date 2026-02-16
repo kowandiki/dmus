@@ -13,8 +13,7 @@ class SongsProvider extends ChangeNotifier {
 
   late final List<StreamSubscription> _subscriptions;
 
-  final List<Song> songs = [];
-
+  final List<Song> songs = []; 
   SongsProvider() {
     _instance = this;
 
@@ -24,7 +23,10 @@ class SongsProvider extends ChangeNotifier {
       ImportController.onSongDeletedId.listen(deleteSongById)
     ];
 
-    TableSong.selectAllWithMetadata().then(fillSongs);
+    TableSong.selectAllWithMetadata().then((songs){ 
+      fillSongs(songs);
+    });
+
   }
 
   @override

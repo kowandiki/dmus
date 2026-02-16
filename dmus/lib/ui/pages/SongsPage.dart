@@ -1,6 +1,8 @@
+import 'package:dmus/core/data/UIEnumSettings.dart';
 import 'package:dmus/core/data/provider/SongsProvider.dart';
 import 'package:dmus/core/localstorage/SettingsHandler.dart';
 import 'package:dmus/ui/Util.dart';
+import 'package:dmus/ui/dialogs/context/SongContextDialog.dart';
 import 'package:dmus/ui/dialogs/picker/ImportDialog.dart';
 import 'package:dmus/ui/lookfeel/CommonTheme.dart';
 import 'package:dmus/ui/widgets/SettingsDrawer.dart';
@@ -11,15 +13,13 @@ import 'package:provider/provider.dart';
 import '/generated/l10n.dart';
 import '../../core/audio/JustAudioController.dart';
 import '../../core/data/DataEntity.dart';
-import '../../core/data/UIEnumSettings.dart';
-import '../dialogs/context/SongContextDialog.dart';
 import 'NavigationPage.dart';
 
 class SongsPage extends StatelessNavigationPage {
   SongsPage({super.key}) : super(icon: Icons.music_note, title: S.current.songs);
-
   @override
   Widget build(BuildContext context) {
+    
     return Scaffold(
       appBar: AppBar(
         title: Text(title),
@@ -71,13 +71,14 @@ class SongsPage extends StatelessNavigationPage {
       body: Column(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
         Consumer<SongsProvider>(builder: (context, songsProvider, child) {
           if (songsProvider.songs.isEmpty) {
+            debugPrint("Time when songs is empty: ${DateTime.now()}");
             return Center(
                 child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: HORIZONTAL_PADDING),
               child: Text(S.current.noSongs, textAlign: TextAlign.center),
             ));
           }
-
+          debugPrint("songs is not empty now ${DateTime.now()}");
           return Expanded(
               child: ListView(
             children: [
