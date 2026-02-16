@@ -113,7 +113,6 @@ class DMUSApp extends StatelessWidget {
       ],
       child: Consumer<ThemeProvider>(
         builder: (context, themeProvider, child) {
-          debugPrint("main materialapp is created now ${DateTime.now()}");
           return MaterialApp(
             title: title,
             theme: themeProvider.isDarkModeEnabled ? darkTheme() : lightTheme(),
