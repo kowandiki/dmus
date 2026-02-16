@@ -71,14 +71,12 @@ class SongsPage extends StatelessNavigationPage {
       body: Column(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
         Consumer<SongsProvider>(builder: (context, songsProvider, child) {
           if (songsProvider.songs.isEmpty) {
-            debugPrint("Time when songs is empty: ${DateTime.now()}");
             return Center(
                 child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: HORIZONTAL_PADDING),
               child: Text(S.current.noSongs, textAlign: TextAlign.center),
             ));
           }
-          debugPrint("songs is not empty now ${DateTime.now()}");
           return Expanded(
               child: ListView(
             children: [
