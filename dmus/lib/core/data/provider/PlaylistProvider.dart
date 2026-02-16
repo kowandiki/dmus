@@ -19,7 +19,7 @@ class PlaylistProvider extends ChangeNotifier {
       ImportController.onPlaylistDeleted.listen(deletePlaylist),
     ];
 
-    TablePlaylist.generateLikesPlaylist().whenComplete(()=>TablePlaylist.selectAll().then(fillPlaylists));
+    TablePlaylist.generateLikesPlaylist().whenComplete(() => TablePlaylist.selectAll().then(fillPlaylists));
   }
 
   @override
